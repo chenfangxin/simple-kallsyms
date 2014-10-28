@@ -84,7 +84,7 @@ static void write_src(FILE *out)
 	fprintf(out, "\tALGN\n");
 	fprintf(out, "linux_syms_addresses:\n");
 	for(i=0;i<table_cnt;i++){
-		fprintf(out, "\tPTR 0x%x\n", table[i].addr);
+		fprintf(out, "\tPTR 0x%llx\n", table[i].addr);
 	}
 
 	fprintf(out, "\n.globl linux_syms_num\n");

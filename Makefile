@@ -5,9 +5,10 @@ target_OBJECTS = root.o \
 				 rte_backtrace.o
 
 INCLUDES =
-CFLAGS = -g
+CFLAGS = -g -Wall
 LIBS = -ldl
 CC = gcc
+# CC = clang
 NM = nm
 COMPILE = $(CC) $(CFLAGS) $(INCLUDES)
 LINK = $(COMPILE) -o $@
@@ -15,7 +16,7 @@ LINK = $(COMPILE) -o $@
 all: $(TARGETS)
 	
 syms: syms.c
-	gcc -o syms syms.c
+	$(CC) -o syms syms.c
 
 .tmp1: $(target_OBJECTS) 
 	$(LINK) $(target_OBJECTS) $(LIBS)

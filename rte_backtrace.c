@@ -7,7 +7,7 @@
 
 extern unsigned long linux_syms_addresses[] __attribute__((weak, section("data")));
 extern unsigned long linux_syms_num __attribute__((weak, section("data")));
-extern unsigned char linux_syms_names[] __attribute__((weak, section("data")));
+extern char linux_syms_names[] __attribute__((weak, section("data")));
 
 static const char *const siglist[] = {
 	"Signal 0",
@@ -66,7 +66,7 @@ static unsigned long rte_get_func_index(unsigned long addr)
 	return low;
 }
 
-static unsigned char *rte_get_dlname(unsigned long epc, unsigned long *base)
+static char *rte_get_dlname(unsigned long epc, unsigned long *base)
 {
 	int ret;
 	Dl_info info;
@@ -74,16 +74,16 @@ static unsigned char *rte_get_dlname(unsigned long epc, unsigned long *base)
 	ret =dladdr((void *)epc, &info);
 	if(ret){
 		*base = (unsigned long)info.dli_fbase;
-		return (unsigned char *)info.dli_fname;
+		return (char *)info.dli_fname;
 	}
 	return NULL;
 }
 
-static unsigned char *rte_get_func_name(unsigned long idx)
+static char *rte_get_func_name(unsigned long idx)
 {
-	unsigned char *tmp = NULL;
-	unsigned char len = 0;
-	unsigned int i=0;
+	char *tmp = NULL;
+	int len = 0;
+	int i=0;
 	tmp = linux_syms_names;
 	len = *tmp;
 	tmp++;
@@ -95,11 +95,11 @@ static unsigned char *rte_get_func_name(unsigned long idx)
 	return tmp;
 }
 
-static unsigned long get_addr_from_string(unsigned char *str)
+static unsigned long get_addr_from_string(char *str)
 {
 	unsigned long addr=0;
-	unsigned char *tmp=str;	
-	unsigned char val=0;
+	char *tmp=str;	
+	char val=0;
 	int start=0;
 	while(*tmp != ']'){
 		if(start==0){
@@ -124,7 +124,7 @@ static unsigned long get_addr_from_string(unsigned char *str)
 
 static void rte_show_backtrace(ucontext_t *ucp, int sig)
 {
-	unsigned char *func_name=NULL;	
+	char *func_name=NULL;	
 	unsigned long epc; 
 	unsigned long func_index=0, func_addr=0;
 	unsigned long dl_base=0;
@@ -190,8 +190,6 @@ static void rte_show_backtrace(ucontext_t *ucp, int sig)
 
 static void sigsem_int(int sig, siginfo_t *sig_info, void *uc)
 {
-	sig = sig;
-	sig_info = sig_info;
 	if(uc){
 		rte_show_backtrace((ucontext_t *)uc, sig);
 	}
@@ -201,7 +199,6 @@ static void sigsem_int(int sig, siginfo_t *sig_info, void *uc)
 static void sigsem_exec(int sig, siginfo_t *sig_info, void *uc)
 {
 	struct sigaction sa;
-	sig_info = sig_info;
 	if(uc){
 		rte_show_backtrace((ucontext_t *)uc, sig);
 	}
